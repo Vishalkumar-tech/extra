@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>JK Tyree — Performance & Style</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    /* --------------------------
+       JK Tyree — Single-file demo
+       - responsive landing page
+       - CSS animations: rotating tyre, moving road, hover cards
+       - small JS for scroll reveal
+       ---------------------------*/
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --accent:#e94f37; /* tyre brand accent */
+      --muted:#8593a6;
+      --glass: rgba(255,255,255,0.04);
+      --glass-2: rgba(255,255,255,0.02);
+      --radius:14px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background: linear-gradient(180deg,var(--bg), #07101a 60%);
+      color: #e6eef8;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.4;
+    }
+
+    /* Container */
+    .wrap{max-width:1180px;margin:48px auto;padding:24px}
+
+    /* Header */
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+    .logo{display:flex;gap:12px;align-items:center}
+    .logo .mark{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#ff7b66);display:flex;align-items:center;justify-content:center;font-weight:800;font-family:Montserrat;color:white}
+    .logo h1{font-family:Montserrat;margin:0;font-size:18px;letter-spacing:0.6px}
+    nav a{color:var(--muted);text-decoration:none;margin-left:18px;font-weight:600}
+    nav a:hover{color:#fff}
+
+    /* Hero */
+    .hero{display:grid;grid-template-columns:1fr 460px;gap:28px;align-items:center;margin-bottom:42px}
+    .hero-left{padding:28px;background:linear-gradient(180deg,var(--glass),transparent);border-radius:var(--radius);backdrop-filter: blur(6px);box-shadow:0 8px 30px rgba(2,6,23,0.6)}
+    .eyebrow{color:var(--accent);font-weight:700;letter-spacing:1px;font-size:13px}
+    .hero h2{font-family:Montserrat;font-size:34px;margin:10px 0}
+    .hero p{color:var(--muted);margin:0 0 18px}
+    .cta-row{display:flex;gap:12px}
+    .btn{padding:12px 18px;border-radius:10px;background:var(--accent);border:none;color:white;font-weight:700;cursor:pointer}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06)}
+
+    /* Tyre card with animation */
+    .tyre-stage{background:linear-gradient(180deg,var(--card),#07101a);border-radius:var(--radius);padding:20px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+    .road{position:absolute;left:0;right:0;bottom:0;height:120px;background:repeating-linear-gradient(-90deg,#081a26 0 8px,#052026 8px 16px);opacity:0.95;transform-origin:center}
+    /* animate the road to create illusion of movement */
+    @keyframes roadMove{from{background-position-x:0}to{background-position-x:200px}}
+    .road{animation: roadMove 1.6s linear infinite}
+
+    .tyre{width:260px;height:260px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;z-index:3}
+    .rim{width:80%;height:80%;border-radius:50%;background:conic-gradient(#0b1220 0 40%, rgba(255,255,255,0.02) 40% 60%, #0b1220 60% 100%);display:flex;align-items:center;justify-content:center}
+
+    /* rotating tyre */
+    .tyre img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;animation:spin 3s linear infinite}
+    @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+    /* small shine */
+    .shine{position:absolute;top:18%;left:18%;width:120px;height:40px;border-radius:40px;background:linear-gradient(90deg,rgba(255,255,255,0.08),rgba(255,255,255,0.01));transform:rotate(-18deg);filter:blur(6px);opacity:0.9}
+
+    /* Feature cards */
+    .features{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
+    .card{background:linear-gradient(180deg,var(--glass-2),transparent);padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(1,5,12,0.6);transform:translateY(0);transition:transform .32s cubic-bezier(.2,.9,.2,1),box-shadow .32s}
+    .card:hover{transform:translateY(-8px);box-shadow:0 10px 28px rgba(0,0,0,0.6)}
+    .card h3{margin:0 0 8px;font-family:Montserrat}
+    .card p{margin:0;color:var(--muted);font-size:14px}
+
+    /* Product grid */
+    .products{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:28px}
+    .product{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:16px;border-radius:12px;display:flex;flex-direction:column;gap:10px}
+    .product .thumb{height:150px;border-radius:10px;background:linear-gradient(135deg,#0b1220,#072235);display:flex;align-items:center;justify-content:center;font-weight:700}
+    .price{margin-top:auto;color:var(--accent);font-weight:800}
+
+    /* Footer */
+    footer{margin-top:44px;padding:18px;border-radius:12px;background:transparent;display:flex;justify-content:space-between;align-items:center;color:var(--muted)}
+
+    /* Responsive */
+    @media (max-width:980px){
+      .hero{grid-template-columns:1fr;}
+      .features,.products{grid-template-columns:repeat(2,1fr)}
+    }
+    @media (max-width:600px){
+      .features,.products{grid-template-columns:1fr}
+      .logo h1{display:none}
+    }
+
+    /* Scroll reveal helper */
+    .reveal{opacity:0;transform:translateY(10px);transition:all .6s cubic-bezier(.2,.9,.2,1)}
+    .reveal.show{opacity:1;transform:none}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">
+        <div class="mark">JK</div>
+        <div>
+          <h1>JK Tyree</h1>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px">Performance • Durability • Roadfeel</div>
+        </div>
+      </div>
+      <nav>
+        <a href="#products">Products</a>
+        <a href="#features">Features</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="hero-left">
+        <div class="eyebrow">NEW ARRIVAL • 2025</div>
+        <h2>Grip the road with confidence — JK Tyree UltraGrip Series</h2>
+        <p>Engineered for long life and superior wet/dry traction. Innovative tread design reduces roll-resistance while keeping a quiet ride.</p>
+        <div class="cta-row">
+          <button class="btn">Shop Now</button>
+          <button class="btn ghost">Find Dealer</button>
+        </div>
+
+        <div class="features reveal" id="features" style="margin-top:18px">
+          <div class="card">
+            <h3>All-weather Grip</h3>
+            <p>Multi-channel tread pattern for predictable braking in wet conditions.</p>
+          </div>
+          <div class="card">
+            <h3>Reinforced Sidewalls</h3>
+            <p>Extra protection against kerb damage and better handling at speed.</p>
+          </div>
+          <div class="card">
+            <h3>Eco Rolling</h3>
+            <p>Optimized rubber compound reduces rolling resistance, improving fuel economy.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="tyre-stage">
+        <div class="shine"></div>
+        <div class="tyre reveal">
+          <!-- replace with a real tyre png if you have one -->
+          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='800'><defs><linearGradient id='g' x1='0' x2='1'><stop offset='0' stop-color='%230b1220'/><stop offset='1' stop-color='%2307141a'/></linearGradient></defs><rect width='100%' height='100%' rx='400' fill='url(%23g)'/><g fill='none' stroke='%2399a8b8' stroke-width='12' opacity='0.08'><circle cx='400' cy='400' r='330'/><circle cx='400' cy='400' r='260'/></g><text x='50%' y='54%' font-family='Montserrat' font-weight='800' font-size='68' fill='%23ffffff' text-anchor='middle'>JK</text></svg>" alt="tyre">
+        </div>
+        <div class="road" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <section class="products reveal" id="products">
+      <div class="product">
+        <div class="thumb">UltraGrip A1</div>
+        <div style="font-weight:700">All-Season Tyre</div>
+        <div class="price">₹ 7,499</div>
+      </div>
+      <div class="product">
+        <div class="thumb">TrailMaster X</div>
+        <div style="font-weight:700">Off-Road / SUV</div>
+        <div class="price">₹ 12,999</div>
+      </div>
+      <div class="product">
+        <div class="thumb">CityRun Eco</div>
+        <div style="font-weight:700">Low Rolling Resistance</div>
+        <div class="price">₹ 5,999</div>
+      </div>
+    </section>
+
+    <footer id="contact">
+      <div>
+        <strong>JK Tyree</strong>
+        <div style="font-size:13px;color:var(--muted)">Dealer inquiry: dealers@jktyree.example</div>
+      </div>
+      <div style="font-size:13px;color:var(--muted)">&copy; 2025 JK Tyree — Built for the road</div>
+    </footer>
+  </div>
+
+  <script>
+    // Simple scroll reveal
+    const observer = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          e.target.classList.add('show')
+        }
+      })
+    },{threshold:0.12})
+    document.querySelectorAll('.reveal').forEach(el=>observer.observe(el))
+
+    // Small reduced-motion respect
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      document.querySelectorAll('img, .road').forEach(el=>el.style.animation='none')
+    }
+  </script>
+</body>
+</html>
