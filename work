@@ -1,0 +1,18 @@
+import random
+import string
+
+# List of sample words
+words = [
+    "Alpha", "Bravo", "Charlie", "Delta", "Echo",
+    "Foxtrot", "Galaxy", "Phoenix", "Quantum",
+    "Shadow", "Titan", "Nova", "Orion", "Vertex"
+]
+
+while True:
+    # Generate a random 16-digit number
+    random_number = ''.join(random.choices(string.digits, k=16))
+
+    # Pick a random word
+    random_word = random.choice(words)
+
+    print(f"{random_number} - {random_word}")
